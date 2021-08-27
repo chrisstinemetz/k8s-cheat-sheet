@@ -2,18 +2,29 @@
 
 # Table of Contents <a name="toc"></a>
 
-1. [Working with pods](#pod-section)
-
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+1. [Pods](#pod-section)
+2. [ReplicaSets](#replicasets-section)
 
 ## Pod Section <a name="pod-section"></a>
 
 [Back to table of contents](#toc)
+
+- pod definition file
+
+```yaml
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+```
 
 - create pod
 
@@ -27,6 +38,10 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 
         kubectl get pods
 
+- pod description
+
+        kubectl describe pod <pod name>
+
   - list additional information _node_ info
 
           kubectl pods -o wides
@@ -34,3 +49,48 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 - edit existing pod
 
         kubectl edit pod <podname>
+
+## ReplicaSets Section <a name="replicasets-section"></a>
+
+[Back to table of contents](#toc)
+
+- ReplicaSet definition file
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
+
+- create ReplicaSet
+
+        kubectl create -f <replicaset-definition.yml>
+
+- get ReplicaSets
+
+        kubectl get replicaset
+
+- scale
+
+       kubectl scale replicaset <replicaset name> --replicas=<num>
+       kubectl scale deployment <deployment name> --replicas=<num>
+       kubectl replace -f <replicaset-definition.yml>
