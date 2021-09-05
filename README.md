@@ -5,7 +5,8 @@
 1. [Pods](#pod-section)
 2. [ReplicaSets](#replicasets-section)
 3. [Deployment](#deployment-section)
-4. [Tips and Tricks](#tips-tricks-section)
+4. [Services](#service-section)
+5. [Tips and Tricks](#tips-tricks-section)
 
 ## Pod Section <a name="pod-section"></a>
 
@@ -147,6 +148,61 @@ spec:
 - list deployment
 
         kubectl get deployments
+
+## Services Section <a name="service-section"></a>
+
+[Back to table of contents](#toc)
+
+- Service definition file (NodePort|ClusterIP|LoadBalancer )
+
+```yaml
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 30008
+  selector:
+    app: myapp
+    type: front-end
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+      port: 80
+  selector:
+    app: myapp
+    type: back-end
+```
+
+> LoadBalancer is a Cloudservice feature and is not native to Kubernetes
+
+```yaml
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: LoadBalancer
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 30008
+  selector:
+    app: myapp
+    type: front-end
+```
 
 ## Tips and Tricks Section <a name="tips-tricks-section"></a>
 
