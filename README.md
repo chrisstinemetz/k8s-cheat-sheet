@@ -45,6 +45,10 @@ spec:
 
         kubectl describe pod <pod name>
 
+- pod logs (multi container)
+
+        kubectl logs <pod name> -c <container name> -n $aks_dev
+
   - list additional information _node_ info
 
           kubectl pods -o wides
